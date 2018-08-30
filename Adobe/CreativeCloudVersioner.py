@@ -239,7 +239,16 @@ class CreativeCloudVersioner(Processor):
               app_version (str): Bundle version
               installed_path (str): The path where the installed item will be installed.
         """
-        self.env["version"] = app_version
+        if self.env["sapCode"] in ('LRCC', 'LTRM'):
+            # Special case for Lightroom and Lightroom Classic CC which have a 
+            # horrible string in CFBundleShortVersionString
+            # which looks like this: 'Adobe Lightroom CC [20180608-0705-e1ba7c8]'
+            bundle_version = re.match(r'.*\[(.*)\]', app_version).group(1)
+            bundle_version = bundle_version.replace('-', '.')
+            self.env["version"] = self.env["version"] + "." + bundle_version
+        else:
+            self.env["version"] = app_version        
+	
         self.env["jss_inventory_name"] = app_bundle
         
         pkginfo = {

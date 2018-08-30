@@ -180,7 +180,7 @@ class CreativeCloudPackager(Processor):
             sap = ElementTree.Element('sapCode')
             sap.text = prod['sapCode']
             ver = ElementTree.Element('version')
-            ver.text = prod['baseVersion']
+            ver.text = prod['baseVersion'] or self.env['version']
             product.append(sap)
             product.append(ver)
             products.append(product)
